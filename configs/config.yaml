@@ -1,0 +1,37 @@
+# @package _global_
+# Main configuration file - composes all sub-configs
+
+defaults:
+  - _self_
+  - model: classifier
+  - data: cifar10
+  - trainer: default
+  - experiment: null # Override with experiment configs
+
+# General settings
+experiment_name: ml_template
+seed: 42
+deterministic: false
+log_level: INFO
+
+# ONNX export settings
+export_onnx: false
+export_onnx_path: outputs/model.onnx
+
+# Logger configuration
+logger:
+  tensorboard:
+    enabled: true
+    save_dir: logs/tensorboard
+  mlflow:
+    enabled: false
+    tracking_uri: http://localhost:5000
+    log_model: true
+
+# Hydra configuration
+hydra:
+  run:
+    dir: outputs/${experiment_name}/${now:%Y-%m-%d_%H-%M-%S}
+  sweep:
+    dir: outputs/${experiment_name}/multirun/${now:%Y-%m-%d_%H-%M-%S}
+    subdir: ${hydra.job.num}

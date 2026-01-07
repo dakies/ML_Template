@@ -1,0 +1,23 @@
+# Default trainer configuration
+max_epochs: 20
+accelerator: auto
+devices: auto
+precision: 32-true # Options: 16-mixed, bf16-mixed, 32-true
+
+# Checkpointing
+checkpoint_dir: checkpoints
+save_top_k: 3
+
+# Training stability
+gradient_clip_val: 1.0
+accumulate_grad_batches: 1
+
+# Early stopping
+early_stopping: true
+patience: 5
+
+# Testing
+run_test: true
+
+# Distributed strategy (null for single GPU)
+strategy: null

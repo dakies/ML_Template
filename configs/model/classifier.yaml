@@ -1,0 +1,10 @@
+# Image classifier model configuration
+num_classes: 10
+in_channels: 3
+backbone: simple_cnn
+
+# Optimizer settings
+learning_rate: 1e-3
+weight_decay: 0.01
+scheduler: cosine # Options: cosine, onecycle, null
+

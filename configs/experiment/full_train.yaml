@@ -1,0 +1,21 @@
+# @package _global_
+# Full training experiment configuration
+
+defaults:
+  - override /trainer: default
+
+experiment_name: full_training
+
+trainer:
+  max_epochs: 100
+  save_top_k: 5
+  patience: 10
+  precision: 16-mixed
+
+model:
+  learning_rate: 3e-4
+  weight_decay: 0.05
+  scheduler: onecycle
+
+export_onnx: true
+export_onnx_path: outputs/model_final.onnx

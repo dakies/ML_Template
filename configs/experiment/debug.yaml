@@ -1,0 +1,19 @@
+# @package _global_
+# Debug experiment - fast iteration for testing
+
+defaults:
+  - override /trainer: default
+
+experiment_name: debug
+
+trainer:
+  max_epochs: 2
+  devices: 1
+  early_stopping: false
+  run_test: false
+
+data:
+  batch_size: 16
+  num_workers: 0
+
+seed: 0

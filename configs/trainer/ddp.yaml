@@ -1,0 +1,12 @@
+# Distributed Data Parallel configuration
+defaults:
+  - default
+
+# DDP strategy
+strategy: ddp
+
+# Multi-GPU settings
+devices: auto # Use all available GPUs
+
+# Mixed precision for faster training
+precision: 16-mixed

@@ -1,0 +1,15 @@
+# DeepSpeed distributed training configuration
+defaults:
+  - default
+
+# DeepSpeed ZeRO Stage 2
+strategy: deepspeed_stage_2
+
+# DeepSpeed works best with mixed precision
+precision: 16-mixed
+
+# Larger batch size with gradient accumulation
+accumulate_grad_batches: 4
+
+# DeepSpeed handles gradient clipping internally
+gradient_clip_val: null
