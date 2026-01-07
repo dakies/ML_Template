@@ -116,6 +116,13 @@ module = "tests.*"
 disallow_untyped_defs = false
 
 # ===================================
+# Ty Configuration
+# ===================================
+
+[tool.ty.environment]
+python-version = "3.11"
+
+# ===================================
 # Pytest Configuration
 # ===================================
 [tool.pytest.ini_options]
@@ -163,4 +170,5 @@ dev = [
     "sphinx>=8.2.3",
     "sphinx-rtd-theme>=3.0.2",
     "sphinxcontrib-napoleon>=0.7",
+    "ty>=0.0.9",
 ]
