@@ -70,7 +70,11 @@ def verify_onnx_model(
 
     print("✓ ONNX model verified successfully!")
     print(f"  Input shape: {input_shape}")
-    print(f"  Output shape: {ort_outputs[0].shape}")
+    output = ort_outputs[0]
+    if hasattr(output, "shape"):
+        print(f"  Output shape: {output.shape}")
+    else:
+        print(f"  Output: {output}")
 
 
 def benchmark_onnx_model(

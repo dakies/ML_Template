@@ -95,7 +95,9 @@ class ImageClassifier(BaseModule):
         """Forward pass through the classifier."""
         return self.model(x)
 
-    def _shared_step(self, batch: tuple[torch.Tensor, torch.Tensor], stage: str) -> torch.Tensor:
+    def _shared_step(
+        self, batch: tuple[torch.Tensor, torch.Tensor], stage: str
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """Shared logic for training/validation/test steps."""
         x, y = batch
         logits = self(x)

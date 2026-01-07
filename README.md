@@ -26,7 +26,7 @@ A professional ML project template demonstrating best practices in software engi
 | **Distributed** | DeepSpeed, DDP | Multi-GPU and multi-node training |
 | **Deployment** | ONNX | Export models for production inference |
 | **Infrastructure** | Docker, SLURM | Containerization, HPC cluster support |
-| **Code Quality** | Ruff, MyPy, Pre-commit | Linting, formatting, type checking |
+| **Code Quality** | Ruff, Ty, MyPy, Pre-commit | Linting, formatting, type checking |
 | **CI/CD** | GitHub Actions | Automated testing and releases |
 | **Documentation** | Sphinx | Auto-generated API docs |
 

@@ -45,7 +45,7 @@ class BaseModule(L.LightningModule):
         """Forward pass through the model."""
         return self.model(x)
 
-    def configure_optimizers(self) -> dict[str, Any]:
+    def configure_optimizers(self) -> Any:
         """Configure optimizer and learning rate scheduler."""
         optimizer = AdamW(
             self.parameters(),
@@ -58,11 +58,13 @@ class BaseModule(L.LightningModule):
 
         # Calculate total steps for schedulers
         if self.trainer and self.trainer.estimated_stepping_batches:
-            total_steps = self.trainer.estimated_stepping_batches
+            total_steps = int(self.trainer.estimated_stepping_batches)
         else:
             total_steps = 10000  # Fallback
 
         max_epochs = self.trainer.max_epochs if self.trainer else 100
+        if max_epochs is None:
+            max_epochs = 100
 
         if self.scheduler_type == "cosine":
             scheduler = CosineAnnealingLR(
@@ -79,11 +81,14 @@ class BaseModule(L.LightningModule):
             }
 
         elif self.scheduler_type == "onecycle":
+            pct_start = (
+                self.warmup_epochs / max_epochs if max_epochs and max_epochs > 0 else 0.1
+            )
             scheduler = OneCycleLR(
                 optimizer,
                 max_lr=self.learning_rate,
                 total_steps=total_steps,
-                pct_start=self.warmup_epochs / max_epochs if max_epochs > 0 else 0.1,
+                pct_start=pct_start,
             )
             return {
                 "optimizer": optimizer,
@@ -128,7 +133,7 @@ class BaseModule(L.LightningModule):
 
         torch.onnx.export(
             self,
-            dummy_input,
+            (dummy_input,),
             filepath,
             export_params=True,
             opset_version=opset_version,

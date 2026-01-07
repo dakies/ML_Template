@@ -1,5 +1,7 @@
 """Main training entrypoint with Hydra configuration."""
 
+from typing import Any, cast
+
 import hydra
 import lightning as L
 import mlflow
@@ -109,9 +111,9 @@ def train(cfg: DictConfig) -> float | None:
         )
 
     # Initialize trainer
-    trainer_kwargs = {
-        "max_epochs": cfg.trainer.max_epochs,
-        "accelerator": cfg.trainer.accelerator,
+    trainer_kwargs: dict[str, Any] = {
+        "max_epochs": cast(int | None, cfg.trainer.max_epochs),
+        "accelerator": cast(str, cfg.trainer.accelerator),
         "devices": cfg.trainer.devices,
         "precision": cfg.trainer.precision,
         "callbacks": callbacks,
@@ -126,7 +128,7 @@ def train(cfg: DictConfig) -> float | None:
     if cfg.trainer.strategy:
         trainer_kwargs["strategy"] = cfg.trainer.strategy
 
-    trainer = L.Trainer(**trainer_kwargs)
+    trainer = L.Trainer(**trainer_kwargs)  # type: ignore[arg-type]
 
     # Train
     log.info("Starting training...")

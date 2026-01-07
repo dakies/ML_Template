@@ -48,7 +48,9 @@ class TestONNXExport:
             outputs = session.run(None, {input_name: dummy_input})
 
             assert len(outputs) == 1
-            assert outputs[0].shape == (1, 10)
+            output = outputs[0]
+            assert hasattr(output, "shape")
+            assert output.shape == (1, 10)  # type: ignore[union-attr]
 
     def test_onnx_output_consistency(self) -> None:
         """Test ONNX model output matches PyTorch output."""
@@ -70,4 +72,7 @@ class TestONNXExport:
             with torch.no_grad():
                 torch_output = model(torch.from_numpy(dummy_input)).numpy()
 
-            np.testing.assert_allclose(onnx_output, torch_output, rtol=1e-3, atol=1e-5)
+            # Ensure both are numpy arrays
+            onnx_array = np.asarray(onnx_output)
+            torch_array = np.asarray(torch_output)
+            np.testing.assert_allclose(onnx_array, torch_array, rtol=1e-3, atol=1e-5)

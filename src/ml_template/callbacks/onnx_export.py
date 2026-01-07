@@ -34,7 +34,7 @@ class ONNXExportCallback(Callback):
 
     def on_train_end(
         self,
-        trainer: L.Trainer,
+        trainer: L.Trainer,  # noqa: ARG002
         pl_module: L.LightningModule,  # noqa: ARG002
     ) -> None:
         """Export model to ONNX at end of training."""
@@ -45,8 +45,9 @@ class ONNXExportCallback(Callback):
         self.export_path.parent.mkdir(parents=True, exist_ok=True)
 
         # Export using the model's built-in method if available
-        if hasattr(pl_module, "export_to_onnx"):
-            pl_module.export_to_onnx(
+        export_method = getattr(pl_module, "export_to_onnx", None)
+        if export_method is not None and callable(export_method):
+            export_method(
                 str(self.export_path),
                 input_shape=self.input_shape,
                 opset_version=self.opset_version,
@@ -59,7 +60,7 @@ class ONNXExportCallback(Callback):
             dummy_input = torch.randn(*self.input_shape, device=pl_module.device)
             torch.onnx.export(
                 pl_module,
-                dummy_input,
+                (dummy_input,),
                 str(self.export_path),
                 opset_version=self.opset_version,
                 input_names=["input"],
