@@ -3,26 +3,17 @@
 
 FROM nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04 AS base
 
-# Prevent interactive prompts
-ENV DEBIAN_FRONTEND=noninteractive
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONDONTWRITEBYTECODE=1
-
-# Install system dependencies
+# Install system dependencies (minimal - uv will handle Python)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3.11 \
-    python3.11-venv \
-    python3-pip \
     git \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Set Python 3.11 as default
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1 \
-    && update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
-
 # Install uv for fast package management
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+
+# Install Python 3.11 using uv
+RUN uv python install 3.11
 
 # Set working directory
 WORKDIR /app
@@ -30,8 +21,8 @@ WORKDIR /app
 # Copy dependency files first for better caching
 COPY pyproject.toml uv.lock* ./
 
-# Install dependencies
-RUN uv sync --frozen --no-dev
+# Install dependencies (uv will use the Python it installed)
+RUN uv sync --frozen --no-dev --python 3.11
 
 # Copy source code
 COPY src/ ./src/
