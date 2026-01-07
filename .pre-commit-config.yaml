@@ -11,6 +11,14 @@ repos:
         args: [--fix]
       - id: ruff-format
 
+  # Type checking with ty
+  - repo: local
+    hooks:
+      - id: ty
+        name: ty check
+        entry: uvx ty check
+        language: python
+
   # Type checking with MyPy
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.13.0
